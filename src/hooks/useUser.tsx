@@ -3,7 +3,7 @@ import type { User } from "@/types/User";
 import { useEffect, useState } from "react";
 
 function useUser() {
-  const [user, setUser] = useState<User[]>([]);
+  const [users, setUser] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,6 +23,6 @@ function useUser() {
     fetchUsers();
   }, []);
 
-  return { user, loading, error };
+  return { users, loading, error };
 }
 export default useUser;
