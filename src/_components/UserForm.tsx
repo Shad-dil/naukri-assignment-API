@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -72,7 +72,7 @@ const UserForm = ({
       .filter(Boolean);
 
     if (errors.length === 0) {
-      const res = await addUser(formData as User);
+      const res = await addUser(formData as unknown as User);
       if (res.ok) {
         toast.success("User Added successfully!");
         onSucess();
@@ -94,7 +94,7 @@ const UserForm = ({
       .filter(Boolean);
 
     if (errors.length === 0) {
-      const res = await updateUser(formData as User);
+      const res = await updateUser(formData as unknown as User);
       if (res.ok) {
         toast.success("User Updated successfully!");
         onSucess();
