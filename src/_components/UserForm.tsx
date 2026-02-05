@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,10 +11,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { formSchema } from "@/schema/formSchema";
+import { addUser, updateUser } from "@/api/user.api";
+import type { User } from "@/types/User";
 
-const UserForm = ({ onClose }) => {
-  const [formData, setFormData] = useState<Record<string, string>>({});
+const emptyForm = {
+  id: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+};
+const UserForm = ({
+  onClose,
+  onSucess,
+  user,
+}: {
+  onClose: () => void;
+  onSucess: () => void;
+  user?: User | null;
+}) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [formData, setFormData] = useState<Record<string, string>>(
+    user
+      ? {
+          id: user.id ? String(user.id) : "",
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          email: user.email || "",
+          phone: user.phone || "",
+        }
+      : emptyForm,
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,6 +54,49 @@ const UserForm = ({ onClose }) => {
           .find((field) => field.name === name)
           ?.validate(formData[name]) ?? null)
       : null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const allTouched: Record<string, boolean> = {};
+    formSchema.forEach((f) => {
+      allTouched[f.name] = true;
+    });
+    setTouched(allTouched);
+
+    const errors = formSchema
+      .map((field) => field.validate(formData[field.name] || ""))
+      .filter(Boolean);
+
+    if (errors.length === 0) {
+      const res = await addUser(formData as User);
+      if (res.ok) {
+        onSucess();
+        onClose();
+      }
+    }
+  };
+
+  const handleEdit = async () => {
+    console.log("Edit user", formData);
+    const allTouched: Record<string, boolean> = {};
+    formSchema.forEach((f) => {
+      allTouched[f.name] = true;
+    });
+    setTouched(allTouched);
+
+    const errors = formSchema
+      .map((field) => field.validate(formData[field.name] || ""))
+      .filter(Boolean);
+
+    if (errors.length === 0) {
+      const res = await updateUser(formData as User);
+      if (res.ok) {
+        onSucess();
+        onClose();
+      }
+    }
+  };
   return (
     <>
       {/* Overlay backdrop */}
@@ -45,12 +115,12 @@ const UserForm = ({ onClose }) => {
           </Button>
         </div>
 
-        <CardHeader>
-          <CardTitle>Add New User</CardTitle>
-          <CardDescription>Enter user details below</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Add New User</CardTitle>
+            <CardDescription>Enter user details below</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="flex flex-col gap-6">
               {formSchema.map((field) => (
                 <div className="grid gap-2">
@@ -59,7 +129,7 @@ const UserForm = ({ onClose }) => {
                     id={field.name}
                     type={field.type}
                     placeholder={field.placeholder}
-                    required={field.required}
+                    name={field.name}
                     value={formData[field.name] || ""}
                     onChange={handleChange}
                   />
@@ -71,16 +141,22 @@ const UserForm = ({ onClose }) => {
                 </div>
               ))}
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Add User
-          </Button>
-          <Button variant="outline" className="w-full" onClick={onClose}>
-            Cancel
-          </Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            {user ? (
+              <Button type="button" className="w-full" onClick={handleEdit}>
+                Update User
+              </Button>
+            ) : (
+              <Button type="submit" className="w-full">
+                Add User
+              </Button>
+            )}
+            <Button variant="outline" className="w-full" onClick={onClose}>
+              Cancel
+            </Button>
+          </CardFooter>
+        </form>
       </Card>
     </>
   );

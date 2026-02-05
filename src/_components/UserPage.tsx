@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { UserForm } from "./UserForm";
 
 export default function UsersPage() {
-  const { users, loading, error } = useUser();
+  const { users, loading, error, refetch } = useUser();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const handleAdd = () => {
     setIsDialogOpen(true);
@@ -17,10 +18,12 @@ export default function UsersPage() {
 
   const handleClose = () => {
     setIsDialogOpen(false);
+    setSelectedUser(null);
   };
 
   const handleEdit = (user: User) => {
     console.log("Edit user", user);
+    setSelectedUser(user);
     setIsDialogOpen(true);
   };
 
@@ -44,7 +47,13 @@ export default function UsersPage() {
         <UserTable users={users} onEdit={handleEdit} onDelete={handleDelete} />
       )}
 
-      {isDialogOpen && <UserForm onClose={handleClose} />}
+      {isDialogOpen && (
+        <UserForm
+          onClose={handleClose}
+          onSucess={refetch}
+          user={selectedUser}
+        />
+      )}
     </div>
   );
 }

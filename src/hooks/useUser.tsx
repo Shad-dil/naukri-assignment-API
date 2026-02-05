@@ -23,6 +23,6 @@ function useUser() {
     fetchUsers();
   }, []);
 
-  return { users, loading, error };
+  return { users, loading, error, refetch: fetchUsers };
 }
 export default useUser;

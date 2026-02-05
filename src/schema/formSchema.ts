@@ -7,7 +7,10 @@ export const formSchema = [
     label: "First Name",
     placeholder: "John",
     required: true,
-    validate: (v: string) => (!v ? "First name is required" : null),
+    validate: (v: string) => {
+      if (!v) return "First name is required";
+      return v.length < 2 ? "First name must be at least 2 characters" : null;
+    },
   },
   {
     type: "text",
@@ -15,7 +18,10 @@ export const formSchema = [
     label: "Last Name",
     placeholder: "Doe",
     required: true,
-    validate: (v: string) => (!v ? "Last name is required" : null),
+    validate: (v: string) => {
+      if (!v) return "Last name is required";
+      return v.length < 2 ? "Last name must be at least 2 characters" : null;
+    },
   },
   {
     type: "email",
@@ -32,6 +38,9 @@ export const formSchema = [
     label: "Phone",
     placeholder: "+91 00000-00000",
     required: true,
-    validate: (v: string) => (!v ? "Phone number is required" : null),
+    validate: (v: string) => {
+      if (!v) return "Phone number is required";
+      return v.length < 10 ? "Phone number must be at least 10 digits" : null;
+    },
   },
 ];

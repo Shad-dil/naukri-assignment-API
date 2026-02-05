@@ -10,7 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import type { UserTableProps } from "@/types/User";
 
+import useUser from "@/hooks/useUser";
+
 const UserTable = ({ users, onEdit, onDelete }: UserTableProps) => {
+  const { refetch } = useUser();
+
   if (!users.length) {
     return (
       <div className="text-center py-10 text-muted-foreground">
