@@ -1,73 +1,99 @@
-# React + TypeScript + Vite
+User Management CRUD Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and extensible React-based CRUD application built as part of a technical assignment.
+The project demonstrates strong React fundamentals, maintainable architecture, and real-world form handling.
 
-Currently, two official plugins are available:
+🔗 Live Application
+https://naukri-assignment-api.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+What This Application Does
 
-## React Compiler
+Create, view, update, and delete users
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Display user data in a clean, responsive table
 
-## Expanding the ESLint configuration
+Add and edit users using a modal-based form
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Validate inputs with clear error messages
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Handle loading and empty states gracefully
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Why This Implementation Stands Out
+✅ Clean React Architecture
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Separation of concerns between:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+UI components
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Data fetching logic
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Form configuration
+
+Stateless presentational components where possible
+
+Page-level state management for predictable behavior
+
+✅ Extensible by Design
+
+User form is schema-driven
+
+New fields can be added with minimal changes
+
+No UI rewrites required when fields are updated
+
+✅ Strong Form Handling
+
+Controlled inputs
+
+Centralized validation logic
+
+Clear user feedback on validation errors
+
+Supports both create and edit flows using the same form
+
+✅ Real-World UX Considerations
+
+Skeleton loader for better loading experience
+
+Explicit edit/delete actions
+
+Modal workflow similar to admin dashboards
+
+Clean, consistent UI using modern component patterns
+
+Tech Stack
+
+React
+
+TypeScript
+
+Vite
+
+ShadCN/UI + Tailwind CSS
+
+JSON Server (Mock API)
+
+Vercel (Deployment)
+
+Extending the Form (Key Requirement)
+
+The form structure and validation are defined using a configuration file:
+
+src/schema/formSchema.ts
+
+
+To add a new field (e.g. Date of Birth):
+
+Add a new field definition to the schema
+
+The form UI and validation automatically update
+
+This approach keeps the codebase flexible and easy to maintain.
+
+Mock API
+
+Uses JSON Server to simulate REST APIs
+
+Supports full CRUD operations
+
+Can be replaced with a real backend without changing the UI
