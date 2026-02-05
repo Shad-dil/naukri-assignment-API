@@ -31,4 +31,16 @@ async function updateUser(user: User) {
   });
   return res;
 }
-export { getUsers, addUser, updateUser };
+
+async function deleteUser(user: User) {
+  try {
+    const res = await fetch(`${BASE_URL}/users/${user.id}`, {
+      method: "DELETE",
+    });
+    return res;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+}
+export { getUsers, addUser, updateUser, deleteUser };

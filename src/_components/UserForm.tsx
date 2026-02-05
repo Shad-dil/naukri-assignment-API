@@ -11,8 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
 import { formSchema } from "@/schema/formSchema";
-import { addUser, updateUser } from "@/api/user.api";
+import { addUser, deleteUser, updateUser } from "@/api/user.api";
 import type { User } from "@/types/User";
+import { toast } from "react-toastify";
 
 const emptyForm = {
   id: "",
@@ -25,10 +26,12 @@ const UserForm = ({
   onClose,
   onSucess,
   user,
+  deleteItem,
 }: {
   onClose: () => void;
   onSucess: () => void;
   user?: User | null;
+  deleteItem?: boolean;
 }) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [formData, setFormData] = useState<Record<string, string>>(
@@ -71,6 +74,7 @@ const UserForm = ({
     if (errors.length === 0) {
       const res = await addUser(formData as User);
       if (res.ok) {
+        toast.success("User Added successfully!");
         onSucess();
         onClose();
       }
@@ -92,11 +96,64 @@ const UserForm = ({
     if (errors.length === 0) {
       const res = await updateUser(formData as User);
       if (res.ok) {
+        toast.success("User Updated successfully!");
         onSucess();
         onClose();
       }
     }
   };
+  const handleDelete = async () => {
+    const res = await deleteUser(user as User);
+    if (res.ok) {
+      toast.success("User Deleted successfully!");
+      onSucess();
+      onClose();
+    }
+  };
+  if (deleteItem) {
+    return (
+      <>
+        {/* Overlay backdrop */}
+        <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
+
+        {/* Modal card */}
+        <Card className="w-full max-w-md fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute top-2 right-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <CardHeader>
+              <CardTitle>
+                <h2>Are You Sure You Want to Delete {user?.firstName}</h2>
+              </CardTitle>
+            </CardHeader>
+            <CardFooter className="flex gap-2 flex-row justify-end mt-4">
+              <Button variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                className=""
+                variant={"destructive"}
+                onClick={handleDelete}
+              >
+                Delete User
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </>
+    );
+  }
+
   return (
     <>
       {/* Overlay backdrop */}
@@ -117,7 +174,9 @@ const UserForm = ({
 
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Add New User</CardTitle>
+            <CardTitle>
+              {user ? `Update User ${user.firstName}` : "Add New User"}
+            </CardTitle>
             <CardDescription>Enter user details below</CardDescription>
           </CardHeader>
           <CardContent>

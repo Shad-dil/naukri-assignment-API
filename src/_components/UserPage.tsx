@@ -11,14 +11,16 @@ export default function UsersPage() {
   const { users, loading, error, refetch } = useUser();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [deleteItem, setDeleteItem] = useState(false);
 
   const handleAdd = () => {
     setIsDialogOpen(true);
   };
 
   const handleClose = () => {
-    setIsDialogOpen(false);
     setSelectedUser(null);
+    setIsDialogOpen(false);
+    setDeleteItem(false);
   };
 
   const handleEdit = (user: User) => {
@@ -29,6 +31,9 @@ export default function UsersPage() {
 
   const handleDelete = (user: User) => {
     console.log("Delete user", user);
+    setSelectedUser(user);
+    setIsDialogOpen(true);
+    setDeleteItem(true);
   };
 
   return (
@@ -52,6 +57,7 @@ export default function UsersPage() {
           onClose={handleClose}
           onSucess={refetch}
           user={selectedUser}
+          deleteItem={deleteItem}
         />
       )}
     </div>
